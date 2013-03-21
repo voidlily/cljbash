@@ -9,7 +9,8 @@
              [latest :as latest]
              [random :as random]
              [browse :as browse]
-             [top :as top])))
+             [top :as top]
+             [add :as add])))
 
 (def latest-quotes
   ["<hq1> i promised myself not to touch java EVER in my life again, i'd rather drive a taxi"
@@ -22,14 +23,18 @@ Jeff: Oh god I hope you don't breed."
 <Me> hi, im an arabic dictator, and i have to get my vast fortune outside the country soon"]
   )
 
+(defn handle-add [text]
+  (println text)
+  (add/view-add {:status :success}))
+
 (defroutes app-routes
   (GET "/" [] (index/view-index))
   (GET "/latest" [] (latest/view-latest (db/latest-quotes 50)))
   (GET "/random" [] (random/view-random (db/random-quotes 5)))
   (GET "/browse" [] (browse/view-browse latest-quotes))
   (GET "/top" [] (top/view-top latest-quotes))
-  (GET "/add" [] "Add quote page")
-  (POST "/add" [] "Add quote submission")
+  (GET "/add" [] (add/view-add))
+  (POST "/add" [text] (handle-add text))
   (POST "/search" [] "Search")
   (route/not-found "Not Found"))
 
