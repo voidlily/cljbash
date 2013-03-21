@@ -20,7 +20,10 @@
      [:ul.nav
       (map #(vector :li
                     (when (= (% :key) active) {:class "active"})
-                    [:a {:href (% :href)} (% :name)]) nav)]]]])
+                    [:a {:href (% :href)} (% :name)]) nav)]
+     [:ul.nav.pull-right
+      [:li [:form.navbar-search.pull-right
+            [:input.search-query {:type "text" :placeholder "Search"}]]]]]]])
 
 (defn layout [title body active-nav]
   (html5
