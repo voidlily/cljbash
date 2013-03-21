@@ -25,7 +25,7 @@ Jeff: Oh god I hope you don't breed."
 (defroutes app-routes
   (GET "/" [] (index/view-index))
   (GET "/latest" [] (latest/view-latest (db/latest-quotes 50)))
-  (GET "/random" [] (random/view-random latest-quotes))
+  (GET "/random" [] (random/view-random (db/random-quotes 5)))
   (GET "/browse" [] (browse/view-browse latest-quotes))
   (GET "/top" [] (top/view-top latest-quotes))
   (GET "/add" [] "Add quote page")

@@ -17,3 +17,9 @@
                          (order :created_at :desc)
                          (order :id :desc)
                          (limit max-quotes))))
+
+(defn random-quotes [max-quotes]
+  (map #(% :text) (select quotes
+                         (fields :text)
+                         (order (raw "RANDOM()"))
+                         (limit max-quotes))))
