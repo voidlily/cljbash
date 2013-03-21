@@ -3,6 +3,7 @@
         hiccup.bootstrap.middleware)
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
+            [cljbash.db :as db]
             (cljbash.views
              [index :as index]
              [latest :as latest]
