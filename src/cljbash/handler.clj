@@ -4,14 +4,29 @@
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
             (cljbash.views
-             [index :as index])))
+             [index :as index]
+             [latest :as latest]
+             [random :as random]
+             [browse :as browse]
+             [top :as top])))
+
+(def latest-quotes
+  ["<hq1> i promised myself not to touch java EVER in my life again, i'd rather drive a taxi"
+   "Rachel: I'm board.
+Jeff: I'm chalk, we should get together.
+Rachel: BOARD! Like I don't have anything to do, not BORD, like a chalkbord. Learn to spellcheck.
+Jeff: Oh god I hope you don't breed."
+   "<Me> the nigerian prince scam is old
+<Me> today you do it like this:
+<Me> hi, im an arabic dictator, and i have to get my vast fortune outside the country soon"]
+  )
 
 (defroutes app-routes
   (GET "/" [] (index/view-index))
-  (GET "/latest" [] "Latest")
-  (GET "/random" [] "Random")
-  (GET "/browse" [] "Browse")
-  (GET "/top" [] "Top quotes")
+  (GET "/latest" [] (latest/view-latest latest-quotes))
+  (GET "/random" [] (random/view-random latest-quotes))
+  (GET "/browse" [] (browse/view-browse latest-quotes))
+  (GET "/top" [] (top/view-top latest-quotes))
   (GET "/add" [] "Add quote page")
   (POST "/add" [] "Add quote submission")
   (POST "/search" [] "Search")
