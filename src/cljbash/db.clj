@@ -10,3 +10,10 @@
 (defn insert-quote [text]
   (insert quotes
           (values {:text text})))
+
+(defn latest-quotes [max-quotes]
+  (map #(% :text) (select quotes
+                         (fields :text)
+                         (order :created_at :desc)
+                         (order :id :desc)
+                         (limit max-quotes))))
