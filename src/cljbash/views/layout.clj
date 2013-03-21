@@ -28,7 +28,7 @@
 (defn layout [title body active-nav]
   (html5
    [:head
-    [:title title]
+    [:title (str "QDB: " title)]
     (include-bootstrap)]
    [:body
     (nav-fixed nav active-nav)
