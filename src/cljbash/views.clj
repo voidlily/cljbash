@@ -50,9 +50,10 @@
       " "
       [:span.quote-score
        [:a {:href (vote-link id :up)} (str "[+]")]
-       " "
-       score
-       " "
+       (cond
+        (< score 0) [:span.badge.badge-important score]
+        (= score 0) [:span.badge score]
+        (> score 0) [:span.badge.badge-success score])
        [:a {:href (vote-link id :down)} (str "[-]")]]]
      [:div.quote  [:pre (escape-html (row :text))]])))
 
