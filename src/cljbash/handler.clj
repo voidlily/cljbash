@@ -10,7 +10,7 @@
   (clojure.string/split (slurp "/Users/voidlily/dev/fortune/quotes") #"\n%\n"))
 
 (defn handle-add [text]
-  (println text)
+  (db/insert-quote text)
   (views/view-add {:status :success}))
 
 (defn handle-get-by-id [id]
