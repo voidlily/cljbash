@@ -36,6 +36,7 @@ Jeff: Oh god I hope you don't breed."
   (GET "/add" [] (add/view-add))
   (POST "/add" [text] (handle-add text))
   (POST "/search" [] "Search")
+  (GET "/quotes/:id" [id] (quotes/view-quote (db/get-quote-by-id id)))
   (route/not-found "Not Found"))
 
 (def app

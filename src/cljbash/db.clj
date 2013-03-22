@@ -12,14 +12,16 @@
           (values {:text text})))
 
 (defn latest-quotes [max-quotes]
-  (map #(% :text) (select quotes
-                         (fields :text)
-                         (order :created_at :desc)
-                         (order :id :desc)
-                         (limit max-quotes))))
+  (select quotes
+          (order :created_at :desc)
+          (order :id :desc)
+          (limit max-quotes)))
 
 (defn random-quotes [max-quotes]
-  (map #(% :text) (select quotes
-                         (fields :text)
-                         (order (raw "RANDOM()"))
-                         (limit max-quotes))))
+  (select quotes
+          (order (raw "RANDOM()"))
+          (limit max-quotes)))
+
+(defn get-quote-by-id [id]
+  (get (select quotes
+               (where {:id id})) 0))
