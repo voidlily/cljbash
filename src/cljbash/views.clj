@@ -34,10 +34,27 @@
     (nav-fixed nav active-nav)
     [:div.container body]]))
 
+(defn quote-link [id]
+  (str "/quotes/" id))
+
+(defn vote-link [id direction]
+  (str "/quotes/" id "/vote?direction=" (name direction)))
+
 (defn render-quote [row]
-  (list
-   [:div {:class "quote-info"} [:a {:href (str "/quotes/" (row :id))} (str "#" (row :id))]]
-   [:div {:class "quote"} [:pre (escape-html (row :text))]]))
+  (let [id (row :id)
+        score (row :total_score)]
+    (list
+     [:div.quote-info
+      [:span.quote-number
+       [:a {:href (quote-link id)} (str "#" id)]]
+      " "
+      [:span.quote-score
+       [:a {:href (vote-link id :up)} (str "[+]")]
+       " "
+       score
+       " "
+       [:a {:href (vote-link id :down)} (str "[-]")]]]
+     [:div.quote  [:pre (escape-html (row :text))]])))
 
 (defn view-add
   ([] (view-add {}))
@@ -98,3 +115,9 @@
            [:h1 "Top quotes"]
            (map render-quote quotes))
           :top))
+
+(defn view-vote [id direction]
+  (layout "Voting"
+          (list
+           [:div (str "Quote " id " successfully voted " direction)])
+          :vote))

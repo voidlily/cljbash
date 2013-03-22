@@ -7,21 +7,52 @@
 (defentity quotes
   (entity-fields :text :created_at))
 
+(defentity votes
+  (entity-fields :quote_id :score))
+
+(defentity quotes-with-votes
+  (table (subselect quotes
+                    (fields :id :text :created_at (raw "COALESCE(SUM(votes.score), 0) AS total_score"))
+                    (join votes (raw "votes.quote_id = quotes.id"))
+                    (group :quotes.id))
+         :quotes-with-votes))
+
 (defn insert-quote [text]
   (insert quotes
           (values {:text text})))
 
 (defn latest-quotes [max-quotes]
-  (select quotes
+  "Gets `max-quotes` latest quotes."
+  (select quotes-with-votes
           (order :created_at :desc)
           (order :id :desc)
           (limit max-quotes)))
 
 (defn random-quotes [max-quotes]
-  (select quotes
+  "Gets `max-quotes` number of random quotes."
+  (select quotes-with-votes
           (order (raw "RANDOM()"))
           (limit max-quotes)))
 
+(defn top-quotes [max-quotes]
+  "Gets the top scoring `max-quotes` number of quotes."
+  (select quotes-with-votes
+          (order :total_score :desc)
+          (order :created_at :desc)
+          (order :id :desc)
+          (limit max-quotes)))
+
 (defn get-quote-by-id [id]
-  (get (select quotes
+  "Get a single quote by ID."
+  (get (select quotes-with-votes
                (where {:id id})) 0))
+
+(defn vote-direction-to-score [direction]
+  (cond
+   (= direction :up) 1
+   (= direction :down) -1))
+
+(defn add-vote [id direction]
+  (when-let [score (vote-direction-to-score direction)]
+    (insert votes
+            (values {:quote_id id :score score}))))

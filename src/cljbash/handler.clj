@@ -19,16 +19,21 @@
       (views/view-quote row)
       (views/view-quote-not-found id))))
 
+(defn handle-vote [id direction]
+  (db/add-vote id (keyword direction))
+  (views/view-vote id direction))
+
 (defroutes app-routes
   (GET "/" [] (views/view-index))
   (GET "/latest" [] (views/view-latest (db/latest-quotes 50)))
   (GET "/random" [] (views/view-random (db/random-quotes 5)))
   (GET "/browse" [] (views/view-browse (map #(do {:id -1 :text %}) latest-quotes)))
-  (GET "/top" [] (views/view-top (map #(do {:id -1 :text %}) latest-quotes)))
+  (GET "/top" [] (views/view-top (db/top-quotes 100)))
   (GET "/add" [] (views/view-add))
   (POST "/add" [text] (handle-add text))
   (POST "/search" [] "Search")
-  (GET "/quotes/:id" [id] (handle-get-by-id id))
+  (GET ["/quotes/:id", :id #"[0-9]+"] [id] (handle-get-by-id id))
+  (GET ["/quotes/:id/vote", :id #"[0-9]+", :direction #"(up|down)"] [id direction] (handle-vote id direction))
   (route/not-found "Not Found"))
 
 (def app
