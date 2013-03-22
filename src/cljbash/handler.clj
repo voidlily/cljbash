@@ -4,8 +4,7 @@
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
             [cljbash.db :as db]
-            [cljbash.views :as views]
-            [ring.util.response :as response]))
+            [cljbash.views :as views]))
 
 (def latest-quotes
   (clojure.string/split (slurp "/Users/voidlily/dev/fortune/quotes") #"\n%\n"))
