@@ -9,7 +9,7 @@
    {:key :latest :name "Latest" :href "/latest"}
    {:key :random :name "Random" :href "/random"}
    {:key :browse :name "Browse" :href "/browse"}
-   {:key :top :name "Top 100 Quotes" :href "/top"}
+   {:key :top :name "Top Quotes" :href "/top"}
    {:key :add :name "Add Quote" :href "/add"}])
 
 (defn nav-fixed [nav active]

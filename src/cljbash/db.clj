@@ -21,12 +21,14 @@
   (insert quotes
           (values {:text text})))
 
-(defn latest-quotes [max-quotes]
+(defn latest-quotes [max-quotes page-number]
   "Gets `max-quotes` latest quotes."
-  (select quotes-with-votes
-          (order :created_at :desc)
-          (order :id :desc)
-          (limit max-quotes)))
+  (let [row-offset (* max-quotes (- page-number 1))]
+    (select quotes-with-votes
+            (order :created_at :desc)
+            (order :id :desc)
+            (limit max-quotes)
+            (offset row-offset))))
 
 (defn random-quotes [max-quotes]
   "Gets `max-quotes` number of random quotes."
@@ -34,13 +36,21 @@
           (order (raw "RANDOM()"))
           (limit max-quotes)))
 
-(defn top-quotes [max-quotes]
+(defn top-quotes [max-quotes page-number]
   "Gets the top scoring `max-quotes` number of quotes."
-  (select quotes-with-votes
-          (order :total_score :desc)
-          (order :created_at :desc)
-          (order :id :desc)
-          (limit max-quotes)))
+  (let [row-offset (* max-quotes (- page-number 1))]
+    (select quotes-with-votes
+            (order :total_score :desc)
+            (order :created_at :desc)
+            (order :id :desc)
+            (limit max-quotes)
+            (offset row-offset))))
+
+(defn browse-quotes [max-quotes page-number]
+  (let [row-offset (* max-quotes (- page-number 1))]
+    (select quotes-with-votes
+            (limit max-quotes)
+            (offset row-offset))))
 
 (defn get-quote-by-id [id]
   "Get a single quote by ID."

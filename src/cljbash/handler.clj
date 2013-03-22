@@ -25,10 +25,13 @@
 
 (defroutes app-routes
   (GET "/" [] (views/view-index))
-  (GET "/latest" [] (views/view-latest (db/latest-quotes 50)))
-  (GET "/random" [] (views/view-random (db/random-quotes 5)))
-  (GET "/browse" [] (views/view-browse (map #(do {:id -1 :text %}) latest-quotes)))
-  (GET "/top" [] (views/view-top (db/top-quotes 100)))
+  (GET ["/latest" :page #"[0-9]*"] [page]
+       (views/view-latest (db/latest-quotes 50 (if page (Integer/parseInt page) 1))))
+  (GET "/random" [page] (views/view-random (db/random-quotes 5)))
+  (GET ["/browse" :page #"[0-9]*"] [page]
+       (views/view-browse (db/browse-quotes 50 (if page (Integer/parseInt page) 1))))
+  (GET ["/top" :page #"[0-9]*"] [page]
+       (views/view-top (db/top-quotes 100 (if page (Integer/parseInt page) 1))))
   (GET "/add" [] (views/view-add))
   (POST "/add" [text] (handle-add text))
   (POST "/search" [] "Search")
