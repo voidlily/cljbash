@@ -39,18 +39,20 @@
    [:div {:class "quote-info"} [:a {:href (str "/quotes/" (row :id))} (str "#" (row :id))]]
    [:div {:class "quote"} [:pre (escape-html (row :text))]]))
 
-(defn view-add [{:keys [status] :or {status nil}}]
-  (layout "Add Quote"
-          (list
-           [:h1 "Add Quote"]
-           [:div.container
-            (cond
-                  (= status :success) [:div.alert.alert-success "Quote submitted"]
-                  (= status :error) [:div.alert.alert-error "There was an error submitting your quote."])
-           [:form {:action "/add" :method "POST"}
-            [:textarea {:class (str "span" 12) :rows 10 :name "text"}]
-            [:button.btn {:type "submit"} "Submit"]]])
-          :add))
+(defn view-add
+  ([] (view-add {}))
+  ([{:keys [status] :or {status nil}}]
+     (layout "Add Quote"
+             (list
+              [:h1 "Add Quote"]
+              [:div.container
+               (cond
+                (= status :success) [:div.alert.alert-success "Quote submitted"]
+                (= status :error) [:div.alert.alert-error "There was an error submitting your quote."])
+               [:form {:action "/add" :method "POST"}
+                [:textarea {:class (str "span" 12) :rows 10 :name "text"}]
+                [:button.btn {:type "submit"} "Submit"]]])
+             :add)))
 
 (defn view-browse [quotes]
   (layout "Browse"
