@@ -24,11 +24,17 @@
 (defn latest-quotes [max-quotes page-number]
   "Gets `max-quotes` latest quotes."
   (let [row-offset (* max-quotes (- page-number 1))]
-    (select quotes-with-votes
-            (order :created_at :desc)
-            (order :id :desc)
-            (limit max-quotes)
-            (offset row-offset))))
+    [
+     (select quotes-with-votes
+             (order :created_at :desc)
+             (order :id :desc)
+             (limit max-quotes)
+             (offset row-offset))
+     (let [count-result
+           (select quotes
+                   (fields "COUNT(*) AS count"))
+           count ((get count-result 0) :count)]
+       (Math/ceil (/ count max-quotes)))]))
 
 (defn random-quotes [max-quotes]
   "Gets `max-quotes` number of random quotes."
@@ -36,21 +42,43 @@
           (order (raw "RANDOM()"))
           (limit max-quotes)))
 
+(defn random-good-quotes [max-quotes]
+  "Gets `max-quotes` number of random quotes."
+  (select quotes-with-votes
+          (order (raw "RANDOM()"))
+          (where (> :total_score 0))
+          (limit max-quotes)))
+
 (defn top-quotes [max-quotes page-number]
   "Gets the top scoring `max-quotes` number of quotes."
   (let [row-offset (* max-quotes (- page-number 1))]
-    (select quotes-with-votes
-            (order :total_score :desc)
-            (order :created_at :desc)
-            (order :id :desc)
-            (limit max-quotes)
-            (offset row-offset))))
+    [
+     (select quotes-with-votes
+             (order :total_score :desc)
+             (order :created_at :desc)
+             (order :id :desc)
+             (limit max-quotes)
+             (offset row-offset))
+     (let [count-result
+           (select quotes-with-votes
+                   (fields "COUNT(*) as count")
+                   (order :total_score :desc)
+                   (order :created_at :desc)
+                   (order :id :desc))
+           count ((get count-result 0) :count)]
+       (Math/ceil (/ count max-quotes)))]))
 
 (defn browse-quotes [max-quotes page-number]
   (let [row-offset (* max-quotes (- page-number 1))]
-    (select quotes-with-votes
-            (limit max-quotes)
-            (offset row-offset))))
+    [
+     (select quotes-with-votes
+             (limit max-quotes)
+             (offset row-offset))
+     (let [count-result
+           (select quotes
+                   (fields "COUNT(*) AS count"))
+           count ((get count-result 0) :count)]
+       (Math/ceil (/ count max-quotes)))]))
 
 (defn get-quote-by-id [id]
   "Get a single quote by ID."

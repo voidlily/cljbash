@@ -13,6 +13,21 @@
   (db/insert-quote text)
   (views/view-add {:status :success}))
 
+(defn handle-latest [page]
+  (let [page (if page (Integer/parseInt page) 1)
+        [quotes num-pages] (db/latest-quotes 50 page)]
+    (views/view-latest quotes page num-pages)))
+
+(defn handle-browse [page]
+  (let [page (if page (Integer/parseInt page) 1)
+        [quotes num-pages] (db/browse-quotes 50 page)]
+    (views/view-browse quotes page num-pages)))
+
+(defn handle-top [page]
+  (let [page (if page (Integer/parseInt page) 1)
+        [quotes num-pages] (db/top-quotes 100 page)]
+    (views/view-top quotes page num-pages)))
+
 (defn handle-get-by-id [id]
   (let [row (db/get-quote-by-id id)]
     (if row
@@ -25,13 +40,11 @@
 
 (defroutes app-routes
   (GET "/" [] (views/view-index))
-  (GET ["/latest" :page #"[0-9]*"] [page]
-       (views/view-latest (db/latest-quotes 50 (if page (Integer/parseInt page) 1))))
+  (GET ["/latest" :page #"[0-9]*"] [page] (handle-latest page))
   (GET "/random" [page] (views/view-random (db/random-quotes 5)))
-  (GET ["/browse" :page #"[0-9]*"] [page]
-       (views/view-browse (db/browse-quotes 50 (if page (Integer/parseInt page) 1))))
-  (GET ["/top" :page #"[0-9]*"] [page]
-       (views/view-top (db/top-quotes 100 (if page (Integer/parseInt page) 1))))
+  (GET "/random-good" [page] (views/view-random (db/random-good-quotes 5)))
+  (GET ["/browse" :page #"[0-9]*"] [page] (handle-browse page))
+  (GET ["/top" :page #"[0-9]*"] [page] (handle-top page))
   (GET "/add" [] (views/view-add))
   (POST "/add" [text] (handle-add text))
   (POST "/search" [] "Search")

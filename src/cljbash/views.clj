@@ -8,6 +8,7 @@
   [{:key :home :name "Home" :href "/"}
    {:key :latest :name "Latest" :href "/latest"}
    {:key :random :name "Random" :href "/random"}
+   {:key :random-good :name "Random > 0" :href "/random-good"}
    {:key :browse :name "Browse" :href "/browse"}
    {:key :top :name "Top Quotes" :href "/top"}
    {:key :add :name "Add Quote" :href "/add"}])
@@ -33,6 +34,15 @@
    [:body
     (nav-fixed nav active-nav)
     [:div.container body]]))
+
+(defn pagination [url-base current-page num-pages]
+  [:div.pagination
+   [:ul
+    (map
+     #(let [li-class (if (= % current-page) :li.active :li)]
+        [li-class
+         [:a {:href (str url-base "?page=" %)} %]])
+     (range 1 (+ num-pages 1)))]])
 
 (defn quote-link [id]
   (str "/quotes/" id))
@@ -72,11 +82,17 @@
                 [:button.btn {:type "submit"} "Submit"]]])
              :add)))
 
-(defn view-browse [quotes]
+(defn wrap-pagination [url page num-pages & content]
+  (list (pagination url page num-pages)
+        content
+        (pagination url page num-pages)))
+
+(defn view-browse [quotes page num-pages]
   (layout "Browse"
           (list
            [:h1 "Browse quotes"]
-           (map render-quote quotes))
+           (wrap-pagination "/browse" page num-pages
+                            (map render-quote quotes)))
           :browse))
 
 (defn view-index []
@@ -86,11 +102,12 @@
            [:div {:id "content"} "And this is a website!"])
           :home))
 
-(defn view-latest [quotes]
+(defn view-latest [quotes page num-pages]
   (layout "Latest"
           (list
            [:h1 "Latest quotes"]
-           (map render-quote quotes))
+           (wrap-pagination "/latest" page num-pages
+                            (map render-quote quotes)))
           :latest))
 
 (defn view-quote [row]
@@ -110,11 +127,19 @@
            (map render-quote quotes))
           :random))
 
-(defn view-top [quotes]
+(defn view-random [quotes]
+  (layout "Random > 0"
+          (list
+           [:h1 "Random quotes > 0"]
+           (map render-quote quotes))
+          :random-good))
+
+(defn view-top [quotes page num-pages]
   (layout "Top"
           (list
            [:h1 "Top quotes"]
-           (map render-quote quotes))
+           (wrap-pagination "/top" page num-pages
+                            (map render-quote quotes)))
           :top))
 
 (defn view-vote [id direction]
