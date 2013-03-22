@@ -127,7 +127,7 @@
            (map render-quote quotes))
           :random))
 
-(defn view-random [quotes]
+(defn view-random-good [quotes]
   (layout "Random > 0"
           (list
            [:h1 "Random quotes > 0"]

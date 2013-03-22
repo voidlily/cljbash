@@ -42,7 +42,7 @@
   (GET "/" [] (views/view-index))
   (GET ["/latest" :page #"[0-9]*"] [page] (handle-latest page))
   (GET "/random" [page] (views/view-random (db/random-quotes 5)))
-  (GET "/random-good" [page] (views/view-random (db/random-good-quotes 5)))
+  (GET "/random-good" [page] (views/view-random-good (db/random-good-quotes 5)))
   (GET ["/browse" :page #"[0-9]*"] [page] (handle-browse page))
   (GET ["/top" :page #"[0-9]*"] [page] (handle-top page))
   (GET "/add" [] (views/view-add))
