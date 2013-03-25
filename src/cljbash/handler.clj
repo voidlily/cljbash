@@ -6,9 +6,6 @@
             [cljbash.db :as db]
             [cljbash.views :as views]))
 
-(def latest-quotes
-  (clojure.string/split (slurp "/Users/voidlily/dev/fortune/quotes") #"\n%\n"))
-
 (defn handle-add [text]
   (db/insert-quote text)
   (views/view-add {:status :success}))
