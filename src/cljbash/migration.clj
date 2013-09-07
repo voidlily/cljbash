@@ -1,7 +1,7 @@
 (ns cljbash.migration
   (:require [clojure.java.jdbc :as sql]))
 
-(defn create-quotes [db]
+(defn create-quotes []
   (sql/create-table :quotes
                     [:id :integer "PRIMARY KEY" "AUTOINCREMENT"]
                     [:text :text "NOT NULL"]

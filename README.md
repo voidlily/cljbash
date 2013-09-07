@@ -12,11 +12,11 @@ You will need [Leiningen][1] 1.7.0 or above installed.
 
 Migrations:
 
-    lein -m cljbash.migrations
+    lein run -m cljbash.migration
 
 Importing existing quotes (assumes a fortune file with quotes separated by % on its own line):
 
-    lein -m cljbash.import <filename>
+    lein run -m cljbash.import <filename>
 
 To start a web server for the application, run:
 
