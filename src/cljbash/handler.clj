@@ -12,17 +12,23 @@
 
 (defn handle-latest [page]
   (let [page (if page (Integer/parseInt page) 1)
-        [quotes num-pages] (db/latest-quotes 50 page)]
+        result (db/latest-quotes 50 page)
+        quotes (:quotes result)
+        num-pages (:num-pages result)]
     (views/view-latest quotes page num-pages)))
 
 (defn handle-browse [page]
   (let [page (if page (Integer/parseInt page) 1)
-        [quotes num-pages] (db/browse-quotes 50 page)]
+        result (db/browse-quotes 50 page)
+        quotes (:quotes result)
+        num-pages (:num-pages result)]
     (views/view-browse quotes page num-pages)))
 
 (defn handle-top [page]
   (let [page (if page (Integer/parseInt page) 1)
-        [quotes num-pages] (db/top-quotes 100 page)]
+        result (db/top-quotes 100 page)
+        quotes (:quotes result)
+        num-pages (:num-pages result)]
     (views/view-top quotes page num-pages)))
 
 (defn handle-get-by-id [id]
